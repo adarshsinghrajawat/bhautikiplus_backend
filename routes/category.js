@@ -77,6 +77,34 @@ router.post('/submit_subcategory', upload.single('logo'), function (req, res, ne
 });
 
 
+router.post('/submit_team', upload.single('logo'), function (req, res, next) {
+    console.log(req.body)
+    console.log(req.file)
+    pool.query("insert into team (facultyname,collegename,post,description,logo,createdat,updateat) values(?,?,?,?,?,?,?) ", [req.body.facultyname,req.body.collegename,req.body.post,req.body.description, req.file.filename, req.body.createdat, req.body.updateat], function (error, result) {
+        if (error) {
+            console.log("error", error)
+            res.status(500).json({ status: false, message: 'server error...' })
+        }
+        else {
+            res.status(200).json({ status: true, message: 'Registered Successfully' })
+        }
+    })
+});
+
+router.get('/fetch_team', function (req, res, next) {
+    console.log(req.query)
+    pool.query("select * from team ",function (error, result) {
+        if (error) {
+            console.log("error", error)
+            res.status(500).json({ status: false, message: 'server error...' })
+        }
+
+        else {
+            res.status(200).json({ status: true, data:result })
+        }
+    })
+});
+
 
 
 
